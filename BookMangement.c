@@ -6,7 +6,7 @@ struct node{
 	struct node* next;
 };
 
-void appendBook(void);
+int appendBook(void);
 void showBooks(void);
 int count(void);
 int searchBook(char[]);
@@ -17,6 +17,7 @@ void main(){
 	int option;
 	int loop = 1;
 	int position;
+	int appendResponse;
 	char bookToSearch[30];
 	while(loop){
 		printf("\nSelect option from book management:");
@@ -29,7 +30,7 @@ void main(){
 		scanf("%d",&option);
 		switch(option){
 			case 1:
-				appendBook();
+				appendResponse = appendBook();
 				break;
 			case 2:
 				showBooks();
@@ -42,6 +43,12 @@ void main(){
 				printf("\nEnter bookname to search:");
 				scanf("%s",bookToSearch);
 				position = searchBook(bookToSearch);
+				if(position>0){
+					printf("\nBook is present.");
+				}
+				else{
+					printf("\nBook is not present.");
+				}
 				break;
 			case 5:
 				printf("\nEnter bookname to search:");
@@ -60,23 +67,32 @@ void main(){
 	}
 }
 
-void appendBook(){
+int appendBook(){
 	struct node* temp;
+	char booknameinput[30];
 	temp = (struct node*)malloc(sizeof(struct node));
 	printf("\nEnter name of book:");
 	scanf("%s",&temp->data);
-	temp->next = NULL;
-	if(head==NULL){
-		head = temp;
+	if(searchBook(temp->data)>0){
+		printf("\nBook already present.");
+		return 0;
 	}
 	else{
-		struct node* traverseAppend;
-		traverseAppend = head;
-		while(traverseAppend->next!=NULL){
+		temp->next = NULL;
+		if(head==NULL){
+			head = temp;
+		}
+		else{
+			struct node* traverseAppend;
+			traverseAppend = head;
+			while(traverseAppend->next!=NULL){
 			traverseAppend = traverseAppend->next;
 		}
 		traverseAppend->next = temp;
 	}
+	return 1;
+	}
+	
 }
 
 void showBooks(){
@@ -115,14 +131,14 @@ int searchBook(char bookname[]){
 	int found = 0;
 	temp = head;
 	if(head==NULL){
-		printf("\nLibrary having 0 books.");
-		return 0;
+		//printf("\nLibrary having 0 books.");
+		return found;
 	}
 	else{
 		while(temp!=NULL){
 		if(strcmp(temp->data,bookname)==0){
 			found = 1;
-			printf("\nBook is available:");
+			//printf("\nBook is available:");
 			count++;
 			break;
 		}
@@ -131,7 +147,7 @@ int searchBook(char bookname[]){
 		}
 	}
 	if(found==0){
-		printf("\nBook not present.");
+		//printf("\nBook not present.");
 		return 0;
 	}
 	return count;
